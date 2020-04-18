@@ -5,10 +5,14 @@ from flask import (
     abort, 
     jsonify, 
     abort)
+    
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-from database.models import setup_db, User, db
+from database.models import (
+    setup_db,
+    db, 
+    User, City, State)
 
 def create_app(test_config=None):
   
