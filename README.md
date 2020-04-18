@@ -20,3 +20,14 @@ To initiate the App run the setup.sh. This will set the configuration variables.
 ```bash
 . setup.sh
 ```
+
+
+## Setup the database
+
+To initialize the database run
+
+'''
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+'''
