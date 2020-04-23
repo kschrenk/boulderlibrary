@@ -1,6 +1,6 @@
 import os
-from flask import abort
 import json
+
 
 class Country:
 
@@ -8,26 +8,29 @@ class Country:
         self.name = name
         self.states = self.get_states()
         self.cities = self.get_cities()
+ 
 
     def __repr__(self):
         return str(self.__dict__)    
 
-    def data_path(self):
-        return os.getcwd() + '/' + f'{self.name}'.lower() + '.json'
 
+    def get_data(self):
+        data_file = os.path.dirname(os.path.abspath(__file__)) + f'/{self.name}'.lower() + '.json'
+        with open(data_file, 'r') as data:
+            return json.load(data)
+ 
+    
     def get_states(self):
         ''' Shows all states in given country.
         INPUT: A JSON Formatted File from https://simplemaps.com/data/de-cities.
         OUTPUT: Returns a list of states.  
         '''
-        # open data path and extract states
-        with open(self.data_path(), 'r') as data:
-            all_cities = json.load(data)
-            states = []
-            for index in range(len(all_cities)):
-                state = all_cities[index]['admin']
-                if state not in states:
-                    states.append(all_cities[index]['admin'])
+        dt_list = self.get_data()
+        states = []
+        for index in range(len(dt_list)):
+            state = dt_list[index]['admin']
+            if state not in states:
+                states.append(dt_list[index]['admin'])
 
         return states
 
@@ -37,23 +40,29 @@ class Country:
         INPUT: A JSON Formatted File from https://simplemaps.com/data/de-cities.
         OUTPUT: Returns a list of cities.  
         '''
-        with open(self.data_path(), 'r') as data:
-            all_cities = json.load(data)
-            cities = []
-            for index in range(len(all_cities)):
-                city = all_cities[index]['city'] 
-                cities.append(city)
+        dt_list = self.get_data()
+        cities = []
+        for index in range(len(dt_list)):
+            city = dt_list[index]['city'] 
+            cities.append(city)
 
         return cities
 
 
-    def show_info(self):
+    def get_states_and_cities(self):
         ''' A Dictionary with country, state and city info
         OUTPUT: A dictionary
         '''
+
+        # create a dictionary with states in country
         info = {}
         for state in self.states:
             info[state] = []        
+
+        # add cities to keys in dictionary
+        dt_list = self.get_data()
+        for city in dt_list:
+            info.get(city['admin']).append(city['city'])
 
         return info
 
@@ -64,14 +73,14 @@ if __name__ == "__main__":
     # Tests
 
     new_country = Country('Germany')
-    # print(new_country.__dict__.keys())
 
-    print('<Cities and States in Germany>')
-    for key in new_country.__dict__:
-        print('// ------------------------------------------ //')
-        print(key, '=>', new_country.__dict__[key])
+    # print('<Cities and States in Germany>')
+    # for key in new_country.__dict__:
+    #     print('// ------------------------------------------ //')
+    #     print(key, '=>', new_country.__dict__[key])
 
-    # print(new_country.show_info())
+    print(new_country.get_states_and_cities())
+
 
 
 

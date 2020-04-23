@@ -13,6 +13,7 @@ Follow instructions to install the latest version of python for your platform in
 ## PIP Dependencies
 
 
+
 ## Configuration Variables
 
 To initiate the App run the setup.sh. This will set the configuration variables.
@@ -25,7 +26,11 @@ To initiate the App run the setup.sh. This will set the configuration variables.
 ## Setup the database
 
 To initialize the database run
+'''
+createdb myclimbinggym
+'''
 
+Than initialize the database with the manager.py
 '''
 python manage.py db init
 python manage.py db migrate
