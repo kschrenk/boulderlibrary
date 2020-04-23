@@ -21,6 +21,19 @@ from database.data import (
 # Functions.
 # -------------------------------------------------------------------- #
 
+def get_gym(id):
+    ''' 
+    Returns a gym object.
+    :param id: int.
+    :return: a sql alchemy object.
+    '''
+    gym = Gym.query.filter(Gym.id == id).one_or_none()
+    if gym == None: 
+        abort(404)
+
+    return gym 
+
+
 def get_city_id(na):
     ''' 
     Returns the id of a city.
@@ -151,9 +164,10 @@ def create_app(test_config=None):
             new_gym = Gym(
                 name = str(body['name']), 
                 address = str(body['address']),
-                city_id = get_city_id(body['name']),
+                city_id = get_city_id(body['city']),
                 website = str(body['website']),
-                category_id = get_category_id(body['category'])
+                category_id = get_category_id(body['category']),
+                status_description = str(body['status'])
                 )
             new_gym.insert()
 
@@ -171,22 +185,42 @@ def create_app(test_config=None):
         '''
         Update a existing gym with its correspondent id
         '''
-        gym = Gym.query.filter(Gym.id == id).one_or_none()
-        if gym == None: 
-            abort(404)
-        
+        gym = get_gym(id)
         try: 
             body = request.get_json()
             print(body)
             gym.name = str(body['name'])
             gym.address = str(body['address'])
-            gym.city_id = get_city_id(body['name'])
+            gym.city_id = get_city_id(body['city'])
             gym.website = str(body['website'])
             gym.category_id = get_category_id(body['category'])
-            gym.status_descr = str(body['status'])
+            gym.status_description = str(body['status'])
             gym.update()
 
-        except Exception: 
+            return jsonify({
+                "success": True,
+                "message": f"Successfully updated {gym.name}"
+            })
+
+        except (KeyError, AttributeError): 
+            abort(422)
+
+
+    @app.route('/gyms/<int:id>', methods=['DELETE'])
+    def delete_gym(id):
+        '''
+        Deletes the gym with the correspondent id
+        '''
+        gym = get_gym(id)
+        try: 
+            gym.delete()
+
+            return jsonify({
+                "message": "success"
+            })
+
+        except Exception:
+            db.session.rollback()
             abort(422)
 
     # -------------------------------------------------------------------- #
