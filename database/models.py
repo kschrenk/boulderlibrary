@@ -5,7 +5,7 @@ from sqlalchemy import Column, String, Integer
 db = SQLAlchemy()
 
 def setup_db(app):
-    app.config["SQLALCHEMY_DATABASE_URI"]=os.environ['DATABASE_URI']
+    app.config["SQLALCHEMY_DATABASE_URI"]=os.environ['DATABASE_URL']
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.environ['SQLALCHEMY_TRACK_MODIFICATIONS']
     db.app = app
     db.init_app(app)

@@ -5,6 +5,6 @@
 
 
 # environment variables for local dev
-export DATABASE_URI=postgresql://schrenkk@localhost:5432/myclimbinggym
+export DATABASE_URL=postgresql://schrenkk@localhost:5432/myclimbinggym
 export SQLALCHEMY_TRACK_MODIFICATIONS=False
 
