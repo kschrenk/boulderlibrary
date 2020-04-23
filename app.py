@@ -89,20 +89,24 @@ def create_app(test_config=None):
         return response
 
     
-    # -------------------------------------------------------------------- #
-    # Data to initialize the app.
-    # -------------------------------------------------------------------- #
+    '''
+    Data to initialize the database. 
+    
+    This includes:
+        * Cities and States
+        * Status descriptions (open or closed)
+        * Categories (Boulder or rope climbing gyms)
+   
+    '''
 
+    # load cities and states
     if (len(State.query.all()) == 0) and (len(City.query.all()) == 0):
-
         c1 = Country('Germany')
         c1_info = c1.get_states_and_cities()  
-    
         try:   
             for state in list(c1_info.keys()):
                 new_state = State(name=state)
                 db.session.add(new_state)
-            
             for state in list(c1_info.keys()):
                 state_in_table = State.query.filter(State.name == state).one_or_none()
                 if state_in_table is None:
@@ -111,24 +115,33 @@ def create_app(test_config=None):
                     for city in c1_info[state]:
                         new_city = City(name=city, state_id=state_in_table.id)
                         db.session.add(new_city)
-            
             db.session.commit()
-
         except Exception:
             db.session.rollback()
-            abort(422)
-           
+            abort(422)  
     else:
         print('=> Cities and States are loaded')
 
-
+    
+    # load status description
     if len(Status.query.all()) == 0:
         db.session.add_all([
             Status(description='open'),
             Status(description='closed')
         ])
         db.session.commit()
+    else:
+        print('=> Status Description are loaded')
 
+
+    # load categories
+    if len(Category.query.all()) == 0:
+        db.session.add_all([
+            Category(description='Boulder'),
+            Category(description='Rope climbing'),
+            Category(description='Boulder and rope climbing')
+        ])
+        db.session.commit()
     else:
         print('=> Categories are loaded')
 
