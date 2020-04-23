@@ -124,8 +124,8 @@ def create_app(test_config=None):
 
     if len(Status.query.all()) == 0:
         db.session.add_all([
-            Status(descr='open'),
-            Status(descr='closed')
+            Status(description='open'),
+            Status(description='closed')
         ])
         db.session.commit()
 
