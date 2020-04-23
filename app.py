@@ -93,44 +93,44 @@ def create_app(test_config=None):
     # Data to initialize the app.
     # -------------------------------------------------------------------- #
 
-    # if (len(State.query.all()) == 0) and (len(City.query.all()) == 0):
+    if (len(State.query.all()) == 0) and (len(City.query.all()) == 0):
 
-    #     c1 = Country('Germany')
-    #     c1_info = c1.get_states_and_cities()  
+        c1 = Country('Germany')
+        c1_info = c1.get_states_and_cities()  
     
-    #     try:   
-    #         for state in list(c1_info.keys()):
-    #             new_state = State(name=state)
-    #             db.session.add(new_state)
+        try:   
+            for state in list(c1_info.keys()):
+                new_state = State(name=state)
+                db.session.add(new_state)
             
-    #         for state in list(c1_info.keys()):
-    #             state_in_table = State.query.filter(State.name == state).one_or_none()
-    #             if state_in_table is None:
-    #                 print('Could not add cities')
-    #             else:
-    #                 for city in c1_info[state]:
-    #                     new_city = City(name=city, state_id=state_in_table.id)
-    #                     db.session.add(new_city)
+            for state in list(c1_info.keys()):
+                state_in_table = State.query.filter(State.name == state).one_or_none()
+                if state_in_table is None:
+                    print('Could not add cities')
+                else:
+                    for city in c1_info[state]:
+                        new_city = City(name=city, state_id=state_in_table.id)
+                        db.session.add(new_city)
             
-    #         db.session.commit()
+            db.session.commit()
 
-    #     except Exception:
-    #         db.session.rollback()
-    #         abort(422)
+        except Exception:
+            db.session.rollback()
+            abort(422)
            
-    # else:
-    #     print('=> Cities and States are loaded')
+    else:
+        print('=> Cities and States are loaded')
 
 
-    # if len(Status.query.all()) == 0:
-    #     db.session.add_all([
-    #         Status(descr='open'),
-    #         Status(descr='closed')
-    #     ])
-    #     db.session.commit()
+    if len(Status.query.all()) == 0:
+        db.session.add_all([
+            Status(descr='open'),
+            Status(descr='closed')
+        ])
+        db.session.commit()
 
-    # else:
-    #     print('=> Categories are loaded')
+    else:
+        print('=> Categories are loaded')
 
 
     # -------------------------------------------------------------------- #
