@@ -80,7 +80,7 @@ class Status(db.Model):
 
 class Category(db.Model):
     id = Column(Integer(), primary_key=True)
-    description = Column(String(40), )
+    description = Column(String(40))
     gyms = db.relationship('Gym', backref="category", lazy=True)
 
     def __repr__(self):
