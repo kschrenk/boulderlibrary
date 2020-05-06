@@ -168,6 +168,10 @@ def create_app(test_config=None):
     # Controller.
     # -------------------------------------------------------------------- #
     
+    @app.route('/')
+    def home():
+        return redirect('/main/gyms', 302)
+
     @app.route('/gyms/create', methods=["POST"])
     def create_gym():
         ''' Creates a new gym in the database
