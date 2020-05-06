@@ -27,6 +27,7 @@ from auth.auth import AuthError, require_auth
 # Blueprints
 from main.main_routes import main_bp 
 from admin import routes as admin_routes
+from auth.auth_routes import auth_bp
 
 
 # -------------------------------------------------------------------- #
@@ -93,7 +94,8 @@ def create_app(test_config=None):
     CORS(app)
     setup_db(app)
     app.register_blueprint(main_bp)
-    app.register_blueprint(admin_routes.admin_bp)
+    app.register_blueprint(admin_routes.admin_bp)#
+    app.register_blueprint(auth_bp)
     
     # setup CORS
 
