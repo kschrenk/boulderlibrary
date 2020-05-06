@@ -1,5 +1,7 @@
 import os
+import sys
 
+# Flask
 from flask import (
     Flask, 
     request, 
@@ -9,6 +11,8 @@ from flask import (
     redirect) 
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+
+# Data
 from database.models import (
     setup_db,
     db,
@@ -16,6 +20,14 @@ from database.models import (
 from database.data import (
     Country
 )
+
+# Authentification
+from auth.auth import AuthError, require_auth
+
+# Blueprints
+from main.main_routes import main_bp 
+from admin import routes as admin_routes
+
 
 # -------------------------------------------------------------------- #
 # Functions.
@@ -59,6 +71,7 @@ def get_category_id(descr):
     
     return category_id
 
+
 # -------------------------------------------------------------------- #
 # Flask App.
 # -------------------------------------------------------------------- #
@@ -79,7 +92,9 @@ def create_app(test_config=None):
     app = Flask(__name__)
     CORS(app)
     setup_db(app)
-
+    app.register_blueprint(main_bp)
+    app.register_blueprint(admin_routes.admin_bp)
+    
     # setup CORS
 
     @app.after_request
@@ -88,15 +103,16 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
-    
+
+    # -------------------------------------------------------------------- #
+    # App data.
+    # -------------------------------------------------------------------- #
     '''
     Data to initialize the database. 
-    
     This includes:
         * Cities and States
         * Status descriptions (open or closed)
         * Categories (Boulder or rope climbing gyms)
-   
     '''
 
     # load cities and states
@@ -150,22 +166,6 @@ def create_app(test_config=None):
     # Controller.
     # -------------------------------------------------------------------- #
     
-    @app.route('/')
-    def public_index():
-        return redirect('gyms', 302)
-
-
-    @app.route('/gyms', methods=["GET"])
-    def get_gyms():
-        ''' Returns a JSON with all gyms '''
-        data = Gym.query.all()
-        body = []
-        for gym in data: 
-            body.append(gym.formatted())
-        
-        return jsonify(body)
-
-
     @app.route('/gyms/create', methods=["POST"])
     def create_gym():
         ''' Creates a new gym in the database
@@ -192,11 +192,22 @@ def create_app(test_config=None):
         except KeyError:
             abort(422)
 
-    
-    @app.route('/gyms/<int:id>', methods=['PATCH'])
-    def update_gym(id):
+
+    @app.route('/gyms/<int:id>', methods=['GET'])
+    def detailed_gym(id):
         '''
-        Update a existing gym with its correspondent id
+        Returns the gym with the given id.
+        :param id: int.
+        '''
+        gym = get_gym(id)
+        return jsonify(gym.formatted())
+
+
+    @app.route('/gyms/<int:id>', methods=['PATCH'])
+    @require_auth('update:gyms')
+    def update_gym(payload, id):
+        '''
+        Update a existing gym with its correspondent id.
         '''
         gym = get_gym(id)
         try: 
@@ -236,9 +247,18 @@ def create_app(test_config=None):
             db.session.rollback()
             abort(422)
 
+
     # -------------------------------------------------------------------- #
     # Error handler.
     # -------------------------------------------------------------------- #
+
+    @app.errorhandler(401)
+    def unprocessable(error):
+        return jsonify({
+            "success": False,
+            "error": 401,
+            "message": "Unauthorized"
+            }), 404
 
     @app.errorhandler(404)
     def unprocessable(error):
@@ -256,8 +276,15 @@ def create_app(test_config=None):
             "message": "unprocessable"
             }), 422
 
-    return app
+    @app.errorhandler(AuthError)
+    def handle_auth_error(ex):
+        response = jsonify(ex.error)
+        response.status_code = ex.status_code
+        return response
 
+
+
+    return app
       
 APP = create_app()
 

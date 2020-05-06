@@ -1,5 +1,3 @@
-
-
 # Installing Dependecies
 
 ## Python 3.7
@@ -11,7 +9,6 @@ Follow instructions to install the latest version of python for your platform in
 
 
 ## PIP Dependencies
-
 
 
 ## Configuration Variables
