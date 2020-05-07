@@ -8,7 +8,8 @@ from flask import (
     abort, 
     jsonify, 
     abort,
-    redirect) 
+    redirect,
+    url_for) 
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -169,8 +170,9 @@ def create_app(test_config=None):
     # -------------------------------------------------------------------- #
     
     @app.route('/')
-    def home():
-        return redirect('/main/gyms', 302)
+    def index():
+        return redirect(url_for( 'main_bp.public_home' ))
+
 
     @app.route('/gyms/create', methods=["POST"])
     def create_gym():
@@ -197,7 +199,6 @@ def create_app(test_config=None):
         
         except KeyError:
             abort(422)
-
 
     @app.route('/gyms/<int:id>', methods=['GET'])
     def detailed_gym(id):

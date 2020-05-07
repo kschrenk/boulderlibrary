@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, jsonify, abort
 from flask import current_app as app
-from database.models import Gym
+from database.models import Gym, State
 # Jinja2
 from jinja2 import TemplateNotFound
 
@@ -10,18 +10,13 @@ main_bp = Blueprint('main_bp', __name__,
     url_prefix='/main')
 
 
-@main_bp.route('/gyms', methods=["GET"])
-def get_gyms():
-    ''' Returns a JSON with all gyms '''
-    try:
-        data = Gym.query.all()
-        body = []
-        for gym in data: 
-            body.append(gym.formatted())
-        
-        return render_template('main.html', gyms=body)
+@main_bp.route('/', methods=["GET"])
+def public_home():
+    return render_template('home.html')
     
-    except TemplateNotFound:
-        abort(404)
 
-    
+@main_bp.route('/gyms', methods=["GET"])
+def public_gyms():
+    query = State.query.order_by(State.name).all()
+    return render_template('gyms.html', states=query)
+
