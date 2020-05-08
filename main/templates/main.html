@@ -54,14 +54,19 @@
         </nav>    
     </header>
 
-{% for message in get_flashed_messages() %}
-    <div class="flask"> {{ message }}</div>
-{% endfor %}
-
 <!-- main -->
 <div class="page">
     <div class="container">
-    {% block content %}{% endblock %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
     </div>
 </div>
 
