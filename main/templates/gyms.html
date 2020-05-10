@@ -4,22 +4,22 @@
 <div class="row">
     <div class="col-md-12">
         <h1>Gyms</h1>
-        <p>Find your boulder gym</p>
+        <p>All gyms listed in the boulderlibary database.</p>
     <div>
 </div>
+
+
 <div class="row">
-    <div class="col-md-12">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Select state
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                {% for state in states %}
-                <a class="dropdown-item states" href="#" data-id="{{ state.id }}">{{ state.name }}</a>
-                {% endfor %}
-            </div>
+    <div class="col-md-8">
+        {% for gym in gyms %}
+        <div>
+            <h4>{{ gym.name }}</h4>
+            <a href="{{ gym.website }}" target="_blank" >{{ gym.website | replace("https://", "") }} </a>
         </div>
+        {% endfor %}
     </div>    
 </div>
-{% endblock %}
 
+
+
+{% endblock %}

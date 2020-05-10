@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+{% block title %} Gyms {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Gyms</h1>
+        <p>Find your climbing and boulder gym</p>
+    <div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Select state
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {% for state in states %}
+                <a class="dropdown-item states" href="#" data-id="{{ state.id }}">{{ state.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>    
+</div>
+{% endblock %}
+

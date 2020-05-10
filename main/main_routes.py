@@ -14,12 +14,23 @@ main_bp = Blueprint('main_bp', __name__,
 @main_bp.route('/', methods=["GET"])
 def public_home():
     return render_template('home.html')
-    
+
 
 @main_bp.route('/gyms', methods=["GET"])
-def public_gyms():
+def all_gyms():
+    ''' Displays all gyms in the database '''
+    body = []
+    query = Gym.query.order_by(Gym.city_id.name).all()
+    for gym in query:
+        body.append(gym.formatted())
+    print(body)
+    return render_template('gyms.html', gyms=body)
+
+
+@main_bp.route('/gyms/search', methods=["GET"])
+def public_find_gyms():
     query = State.query.order_by(State.name).all()
-    return render_template('gyms.html', states=query)
+    return render_template('find_gyms.html', states=query)
 
 
 @main_bp.route('/gyms/<int:id>', methods=["GET"])
@@ -49,4 +60,3 @@ def public_gyms_in_state(id):
         abort(422)
     else:
         return jsonify(dic_of_gyms)
-
