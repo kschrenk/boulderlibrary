@@ -16,6 +16,8 @@ SQLAlchemy
 python-dotenv
 python-jose
 six
+requests
+authlib
 
 # Unknown Dependencies
 click

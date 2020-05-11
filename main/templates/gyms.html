@@ -5,21 +5,22 @@
     <div class="col-md-12">
         <h1>Gyms</h1>
         <p>All gyms listed in the boulderlibary database.</p>
-    <div>
+    </div>
 </div>
 
-
-<div class="row">
-    <div class="col-md-8">
+<div class="row gyms">
+    <div class="col-md-10">
         {% for gym in gyms %}
-        <div>
+        <div class="gym">
             <h4>{{ gym.name }}</h4>
-            <a href="{{ gym.website }}" target="_blank" >{{ gym.website | replace("https://", "") }} </a>
+            <ul>
+                <li>{{ gym.address + ", " + gym.city }}</li>
+                <li>{{ gym.category }}</li>
+                <li><a href="{{ gym.website }}" target="_blank" >{{ gym.website | replace("https:", "") | replace("/", "") | replace("www.", "") }}</a></li>
+            </ul>
         </div>
         {% endfor %}
     </div>    
 </div>
-
-
 
 {% endblock %}

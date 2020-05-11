@@ -9,7 +9,9 @@ from flask import (
     jsonify, 
     abort,
     redirect,
-    url_for) 
+    url_for, 
+    render_template, 
+    session) 
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -24,6 +26,14 @@ from database.data import (
 
 # Authentification
 from auth.auth import AuthError, require_auth
+
+from functools import wraps
+import json
+from werkzeug.exceptions import HTTPException
+from dotenv import load_dotenv, find_dotenv
+from authlib.integrations.flask_client import OAuth
+from six.moves.urllib.parse import urlencode
+
 
 # Blueprints
 from main.main_routes import main_bp 
@@ -92,11 +102,12 @@ def create_app(test_config=None):
     # create and configure the app
     
     app = Flask(__name__)
+    app.secret_key = os.environ['SECRET_KEY']
     CORS(app)
     setup_db(app)
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_routes.admin_bp)#
-    app.register_blueprint(auth_bp)
+    # app.register_blueprint(auth_bp)
     
     # setup CORS
 
@@ -106,6 +117,20 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
+    # Authentification
+    oauth = OAuth(app)
+
+    auth0 = oauth.register(
+        'auth0',
+        client_id=os.environ['CLIENT_ID'],
+        client_secret=os.environ['CLIENT_SECRET'],
+        api_base_url=os.environ['API_BASE_URL'],
+        access_token_url=os.environ['ACCESS_TOKEN_URL'],
+        authorize_url=os.environ['AUTHORIZE_URL'],
+        client_kwargs={
+            'scope': 'openid profile email',
+        },
+    )
 
     # -------------------------------------------------------------------- #
     # App data.
@@ -174,85 +199,26 @@ def create_app(test_config=None):
         return redirect(url_for( 'main_bp.public_home' ))
 
 
-    @app.route('/gyms/create', methods=["POST"])
-    def create_gym():
-        ''' Creates a new gym in the database
-        INPUT: JSON formatted string that contains name, address, city, website and category. 
-        '''
-        try: 
-            body = request.get_json()
-            print(body)
-            new_gym = Gym(
-                name = str(body['name']), 
-                address = str(body['address']),
-                city_id = get_city_id(body['city']),
-                website = str(body['website']),
-                category_id = get_category_id(body['category']),
-                status_description = str(body['status'])
-                )
-            new_gym.insert()
+    @app.route('/callback')
+    def callback_handling():
+        # Handles response from token endpoint
+        auth0.authorize_access_token()
+        resp = auth0.get('userinfo')
+        userinfo = resp.json()
 
-            return jsonify({
-                "success": True,
-                "message": f"Successfully added {new_gym.name} to Database"
-            })
-        
-        except KeyError:
-            abort(422)
+        # Store the user information in flask session
+        session['jwt_payload'] = userinfo
+        session['profile'] = {
+            'user_id': userinfo['sub'],
+            'name': userinfo['name'],
+            'picture': userinfo['picture']
+        }
+        return redirect('/dashboard')
 
-    @app.route('/gyms/<int:id>', methods=['GET'])
-    def detailed_gym(id):
-        '''
-        Returns the gym with the given id.
-        :param id: int.
-        '''
-        gym = get_gym(id)
-        return jsonify(gym.formatted())
-
-
-    @app.route('/gyms/<int:id>', methods=['PATCH'])
-    @require_auth('update:gyms')
-    def update_gym(payload, id):
-        '''
-        Update a existing gym with its correspondent id.
-        '''
-        gym = get_gym(id)
-        try: 
-            body = request.get_json()
-            print(body)
-            gym.name = str(body['name'])
-            gym.address = str(body['address'])
-            gym.city_id = get_city_id(body['city'])
-            gym.website = str(body['website'])
-            gym.category_id = get_category_id(body['category'])
-            gym.status_description = str(body['status'])
-            gym.update()
-
-            return jsonify({
-                "success": True,
-                "message": f"Successfully updated {gym.name}"
-            })
-
-        except (KeyError, AttributeError): 
-            abort(422)
-
-
-    @app.route('/gyms/<int:id>', methods=['DELETE'])
-    def delete_gym(id):
-        '''
-        Deletes the gym with the correspondent id
-        '''
-        gym = get_gym(id)
-        try: 
-            gym.delete()
-
-            return jsonify({
-                "message": "success"
-            })
-
-        except Exception:
-            db.session.rollback()
-            abort(422)
+    
+    @app.route('/login')
+    def login():
+        return auth0.authorize_redirect(redirect_uri=os.environ['CALLBACK_URL'])
 
 
     # -------------------------------------------------------------------- #
