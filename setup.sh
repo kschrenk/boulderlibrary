@@ -14,6 +14,6 @@ export CLIENT_SECRET='4ujS23WXt7eRdIjKgyO4DFsHCADvarPk7ScxXmNo6O65e-O9_8bMtFx9gv
 export API_BASE_URL='https://dev-wd714d8h.eu.auth0.com'
 export ACCESS_TOKEN_URL='https://dev-wd714d8h.eu.auth0.com/oauth/token'
 export AUTHORIZE_URL='https://dev-wd714d8h.eu.auth0.com/authorize'
-export CALLBACK_URL='http://localhost:5000/callback'
+export CALLBACK_URL='http://localhost:5000/user/callback'
 export AUTH0_DOMAIN='dev-wd714d8h.eu.auth0.com' 
 export API_AUDIENCE='boulder'

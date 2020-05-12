@@ -10,8 +10,7 @@ from flask import (
     abort,
     redirect,
     url_for, 
-    render_template, 
-    session) 
+    render_template) 
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -25,20 +24,12 @@ from database.data import (
 )
 
 # Authentification
-from auth.auth import AuthError, require_auth
-
-from functools import wraps
-import json
-from werkzeug.exceptions import HTTPException
-from dotenv import load_dotenv, find_dotenv
-from authlib.integrations.flask_client import OAuth
-from six.moves.urllib.parse import urlencode
+from user.auth import AuthError
 
 
 # Blueprints
 from main.main_routes import main_bp 
-from admin import routes as admin_routes
-from auth.auth_routes import auth_bp
+from user.user_routes import user_bp
 
 
 # -------------------------------------------------------------------- #
@@ -105,9 +96,11 @@ def create_app(test_config=None):
     app.secret_key = os.environ['SECRET_KEY']
     CORS(app)
     setup_db(app)
+
+    # register blueprints
+
     app.register_blueprint(main_bp)
-    app.register_blueprint(admin_routes.admin_bp)#
-    # app.register_blueprint(auth_bp)
+    app.register_blueprint(user_bp)
     
     # setup CORS
 
@@ -117,20 +110,6 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
-    # Authentification
-    oauth = OAuth(app)
-
-    auth0 = oauth.register(
-        'auth0',
-        client_id=os.environ['CLIENT_ID'],
-        client_secret=os.environ['CLIENT_SECRET'],
-        api_base_url=os.environ['API_BASE_URL'],
-        access_token_url=os.environ['ACCESS_TOKEN_URL'],
-        authorize_url=os.environ['AUTHORIZE_URL'],
-        client_kwargs={
-            'scope': 'openid profile email',
-        },
-    )
 
     # -------------------------------------------------------------------- #
     # App data.
@@ -197,28 +176,6 @@ def create_app(test_config=None):
     @app.route('/')
     def index():
         return redirect(url_for( 'main_bp.public_home' ))
-
-
-    @app.route('/callback')
-    def callback_handling():
-        # Handles response from token endpoint
-        auth0.authorize_access_token()
-        resp = auth0.get('userinfo')
-        userinfo = resp.json()
-
-        # Store the user information in flask session
-        session['jwt_payload'] = userinfo
-        session['profile'] = {
-            'user_id': userinfo['sub'],
-            'name': userinfo['name'],
-            'picture': userinfo['picture']
-        }
-        return redirect('/dashboard')
-
-    
-    @app.route('/login')
-    def login():
-        return auth0.authorize_redirect(redirect_uri=os.environ['CALLBACK_URL'])
 
 
     # -------------------------------------------------------------------- #

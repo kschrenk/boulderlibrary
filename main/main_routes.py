@@ -24,6 +24,7 @@ def all_gyms():
     for gym in query:
         body.append(gym.formatted())
     print(body)
+
     return render_template('gyms.html', gyms=body)
 
 

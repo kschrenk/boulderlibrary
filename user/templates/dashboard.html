@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% block title %} Login {% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Dashboard</h1>
+        <p>Welcome {{ userinfo['name'] }}</p>
+        <pre>{{ userinfo_pretty }}</pre>
+        <a class="btn btn-outline-secondary" href="{{ url_for('user_bp.logout') }}" role="button">Logout</a>
+    </div>
+</div>
+
+
+{% endblock %}
