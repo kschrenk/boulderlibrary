@@ -7,20 +7,21 @@
         <p>All gyms listed in the boulderlibary database.</p>
     </div>
 </div>
-
-<div class="row gyms">
-    <div class="col-md-10">
-        {% for gym in gyms %}
-        <div class="gym">
-            <h4>{{ gym.name }}</h4>
-            <ul>
-                <li>{{ gym.address + ", " + gym.city }}</li>
-                <li>{{ gym.category }}</li>
-                <li><a href="{{ gym.website }}" target="_blank" >{{ gym.website | replace("https:", "") | replace("/", "") | replace("www.", "") }}</a></li>
-            </ul>
-        </div>
-        {% endfor %}
-    </div>    
-</div>
-
+<section class="gyms">
+    {% for gym in gyms %}
+    <div class="row">
+        <div class="col-md-10">
+            <div class="gym">
+                <h4>{{ gym.name }}</h4>
+                <ul>
+                    <li>{{ gym.address + ", " + gym.city }}</li>
+                    <li>{{ gym.category }}</li>
+                    <li><a href="{{ gym.website }}" target="_blank" >{{ gym.website | replace("https:", "") | replace("/", "") | replace("www.", "") }}</a></li>
+                </ul>
+            </div>
+        </div>    
+    </div>
+    {% endfor %}
+</section>
 {% endblock %}
+

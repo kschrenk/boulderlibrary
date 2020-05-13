@@ -1,0 +1,14 @@
+@media (min-width: 992px) {  
+    /******************************************
+    * main.html 
+    */
+
+    /* navbar */
+    .navbar-collapse{
+        justify-content:flex-end;
+    }    
+}
+
+
+
+

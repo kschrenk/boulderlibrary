@@ -1,5 +1,5 @@
 from flask import current_app as app
-from flask import jsonify, redirect, render_template, session, url_for
+from flask import jsonify, redirect, render_template, session, url_for, flash
 
 from functools import wraps
 import json
@@ -36,8 +36,12 @@ def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if 'profile' not in session:
+            flash('You are currently logged out. Login first to visit your Dashboard.')
             #Redirect to Login page here
             return redirect('/')
         return f(*args, **kwargs)
     
     return decorated
+
+
+
