@@ -2,39 +2,58 @@ import sys
 from flask import Blueprint, render_template, redirect, jsonify, abort, flash
 from flask import current_app as app
 from database.models import Gym, State, City, db
-# Jinja2
-from jinja2 import TemplateNotFound
 
-main_bp = Blueprint('main_bp', __name__, 
-    template_folder='templates',
-    static_folder='static',
-    url_prefix='/main')
-
-
-@main_bp.route('/', methods=["GET"])
-def public_home():
-    return render_template('home.html')
+main_bp = Blueprint('main_bp', __name__)
 
 
 @main_bp.route('/gyms', methods=["GET"])
-def all_gyms():
-    ''' Displays all gyms in the database '''
+def public_all_gyms():
+    ''' 
+    Displays all gyms in the database 
+    :returns: JSON.
+    '''
     body = []
-    query = Gym.query.order_by(Gym.city_id.name).all()
-    for gym in query:
-        body.append(gym.formatted())
-    print(body)
-
-    return render_template('gyms.html', gyms=body)
-
-
-@main_bp.route('/gyms/search', methods=["GET"])
-def public_find_gyms():
-    query = State.query.order_by(State.name).all()
-    return render_template('find_gyms.html', states=query)
+    error = False
+    try:
+        query = Gym.query.order_by(Gym.city_id.name).all()
+        for gym in query:
+            body.append(gym.formatted())
+    except Exception:
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+    if error:
+        abort(422)
+    return jsonify(body)
 
 
 @main_bp.route('/gyms/<int:id>', methods=["GET"])
+def public_gym(id):
+    '''
+    Returns the gym by id.
+    :param id: int:
+    '''
+    error = False
+    try:
+        query = Gym.query.filter(Gym.id == id).one_or_none()
+        if query is None:
+            abort(404) 
+        body = [query.formatted()]
+    except Exception:
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+    if error:
+        abort(422)
+    else:
+        return jsonify(body)
+
+
+@main_bp.route('/state/<int:id>/gyms', methods=["GET"])
 def public_gyms_in_state(id):
     '''
     Returns a json with all gyms in state
@@ -42,8 +61,8 @@ def public_gyms_in_state(id):
     '''
     error = False
     try:
-        # creates a dictionary with cities and gyms
         query = City.query.filter_by(state_id = id).order_by(City.name).all()
+        # creates a dictionary with cities and gyms
         dic_of_gyms = {}
         for city in query:
             gyms_in_city = city.gyms
@@ -61,3 +80,11 @@ def public_gyms_in_state(id):
         abort(422)
     else:
         return jsonify(dic_of_gyms)
+
+
+
+
+
+
+
+

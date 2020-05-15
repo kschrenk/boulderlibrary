@@ -23,13 +23,11 @@ from database.data import (
     Country
 )
 
-# Authentification
-from user.auth import AuthError
-
-
 # Blueprints
 from main.main_routes import main_bp 
-from user.user_routes import user_bp
+
+# Authentification
+from auth import AuthError
 
 
 # -------------------------------------------------------------------- #
@@ -98,9 +96,7 @@ def create_app(test_config=None):
     setup_db(app)
 
     # register blueprints
-
     app.register_blueprint(main_bp)
-    app.register_blueprint(user_bp)
     
     # setup CORS
 
@@ -175,7 +171,7 @@ def create_app(test_config=None):
     
     @app.route('/')
     def index():
-        return redirect(url_for( 'main_bp.public_home' ))
+        return redirect(url_for( 'main_bp.all_gyms' ))
 
 
     # -------------------------------------------------------------------- #
