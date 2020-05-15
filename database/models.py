@@ -4,6 +4,10 @@ from sqlalchemy import Column, String, Integer
 
 db = SQLAlchemy()
 
+# ------------------------------------------------ #
+#  Models.
+# ------------------------------------------------ #
+
 def setup_db(app):
     app.config["SQLALCHEMY_DATABASE_URI"]=os.environ['DATABASE_URL']
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.environ['SQLALCHEMY_TRACK_MODIFICATIONS']
@@ -87,4 +91,42 @@ class Category(db.Model):
         return f'<Id: {self.id}; Description: {self.description}>'
 
 
+# ------------------------------------------------ #
+#  Getter and Setter
+# ------------------------------------------------ #
 
+def get_gym(id):
+    ''' 
+    Returns a gym object.
+    :param id: int.
+    :return: a sql alchemy object.
+    '''
+    gym = Gym.query.filter(Gym.id == id).one_or_none()
+
+    return gym 
+
+
+def get_city_id(na):
+    ''' 
+    Returns the id of a city.
+    :param name: str.
+    :return: the city's id.
+    '''
+    city_id = City.query.filter(City.name == na).one_or_none().id
+    if city_id == None:
+        abort(404)
+    
+    return city_id
+
+
+def get_category_id(descr):
+    '''
+    Returns the id of a gym category.
+    :param descr: str.
+    :return: the category's id.
+    '''
+    category_id = Category.query.filter(Category.description == str(descr)).one_or_none().id
+    if category_id == None:
+        abort(404)
+    
+    return category_id

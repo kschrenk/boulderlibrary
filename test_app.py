@@ -27,7 +27,7 @@ class BoulderlibraryTestCase(unittest.TestCase):
         pass
 
     ''' Test
-    ROUTE: ('/main/gyms')
+    ROUTE: ('/gyms')
     METHODS: GET
     '''
     def test_start_search(self):

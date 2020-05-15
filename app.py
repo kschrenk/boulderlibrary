@@ -32,59 +32,10 @@ from auth import AuthError
 
 
 # -------------------------------------------------------------------- #
-# Functions.
-# -------------------------------------------------------------------- #
-
-def get_gym(id):
-    ''' 
-    Returns a gym object.
-    :param id: int.
-    :return: a sql alchemy object.
-    '''
-    gym = Gym.query.filter(Gym.id == id).one_or_none()
-    if gym == None: 
-        abort(404)
-
-    return gym 
-
-
-def get_city_id(na):
-    ''' 
-    Returns the id of a city.
-    :param name: str.
-    :return: the city's id.
-    '''
-    city_id = City.query.filter(City.name == na).one_or_none().id
-    if city_id == None:
-        abort(404)
-    
-    return city_id
-
-
-def get_category_id(descr):
-    '''
-    Returns the id of a gym category.
-    :param descr: str.
-    :return: the category's id.
-    '''
-    category_id = Category.query.filter(Category.description == str(descr)).one_or_none().id
-    if category_id == None:
-        abort(404)
-    
-    return category_id
-
-
-# -------------------------------------------------------------------- #
 # Flask App.
 # -------------------------------------------------------------------- #
 def create_app(test_config=None):
-    ''' Initializes the API.
-    For further information check out the README.md. This function includes:
-        - App conifguration.
-        - Data to initialize the app.
-        - Controller.
-        - Error handler.
-    '''
+
     # -------------------------------------------------------------------- #
     # App config.
     # -------------------------------------------------------------------- #
@@ -205,7 +156,6 @@ def create_app(test_config=None):
         response = jsonify(ex.error)
         response.status_code = ex.status_code
         return response
-
 
 
     return app

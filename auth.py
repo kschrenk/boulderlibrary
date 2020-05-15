@@ -134,3 +134,5 @@ def require_auth(permission=''):
             return f(payload, *args, **kwargs)
         return wrapper
     return requires_auth_decorator
+
+    
