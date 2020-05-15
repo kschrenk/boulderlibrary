@@ -18,7 +18,7 @@ class User(db.Model):
     def __repr__(self):
         return f'<Id: {self.id}; Name: {self.name}>'
 
-
+        
 class City(db.Model): 
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)

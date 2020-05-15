@@ -26,7 +26,8 @@ def public_all_gyms():
         db.session.close()
     if error:
         abort(422)
-    return jsonify(body)
+    else:
+        return jsonify(body)
 
 
 @main_bp.route('/gyms/<int:id>', methods=["GET"])
