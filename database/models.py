@@ -2,7 +2,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer
 
-database_name = "boulderlibrary_test"
+database_name = "myclimbinggym"
 database_path = os.environ['DATABASE_BASE_URL'] + database_name
 
 db = SQLAlchemy()
@@ -30,10 +30,15 @@ def db_drop_and_create_all():
 
 class User(db.Model):
     id = Column(Integer, primary_key=True)
-    name = Column(String(80), unique=True, nullable=False)
+    name = Column(String(80), nullable=False)
+    last_name = Column(String(24), nullable=False)
 
     def __repr__(self):
         return f'<Id: {self.id}; Name: {self.name}>'
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
 
         
 class City(db.Model): 

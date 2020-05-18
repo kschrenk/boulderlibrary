@@ -24,8 +24,9 @@ from database.data import (
 )
 
 # Blueprints
-from main.main_routes import main_bp 
-from admin.admin_routes import admin_bp
+from main.main_routes import main_bp as main
+from admin.admin_routes import admin_bp as admin
+from user.user_routes import user_bp as user
 
 # Authentification
 from auth import AuthError
@@ -46,8 +47,9 @@ def create_app(test_config=None):
     setup_db(app)
 
     # register blueprints
-    app.register_blueprint(main_bp)
-    app.register_blueprint(admin_bp)
+    app.register_blueprint(main)
+    app.register_blueprint(admin)
+    app.register_blueprint(user)
     
     # setup CORS
     @app.after_request
