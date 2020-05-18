@@ -5,7 +5,7 @@ export FLASK_ENV=development
 
 # Environment variables for local dev
 export SECRET_KEY='kd/keilJKAI921578_dsl%g'
-export DATABASE_URL='postgresql://schrenkk@localhost:5432/myclimbinggym'
+export DATABASE_BASE_URL='postgresql://schrenkk@localhost:5432/'
 export SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 # Auth0

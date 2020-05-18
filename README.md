@@ -7,7 +7,6 @@ Follow instructions to install the latest version of python for your platform in
 ## Virtual Environment
 
 
-
 ## PIP Dependencies
 
 
@@ -18,7 +17,6 @@ To initiate the App run the setup.sh. This will set the configuration variables.
 ```bash
 . setup.sh
 ```
-
 
 ## Setup the database
 
@@ -33,3 +31,14 @@ python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
 '''
+
+# Testing
+At first create a new database for testing.
+```bash
+createdb boulderlibrary_test
+```
+
+To test again drop the database and create it again.
+```bash
+dropdb boulderlibrary_test && createdb boulderlibrary_test
+```

@@ -39,7 +39,7 @@ def create_app(test_config=None):
     # -------------------------------------------------------------------- #
     # App config.
     # -------------------------------------------------------------------- #
-
+    
     # create and configure the app
     app = Flask(__name__)
     CORS(app)
@@ -120,7 +120,7 @@ def create_app(test_config=None):
     
     @app.route('/')
     def index():
-        return redirect(url_for( 'main_bp.all_gyms' ))
+        return redirect(url_for( 'main_bp.public_all_gyms' ))
 
 
     # -------------------------------------------------------------------- #

@@ -2,17 +2,30 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer
 
+database_name = "boulderlibrary_test"
+database_path = os.environ['DATABASE_BASE_URL'] + database_name
+
 db = SQLAlchemy()
 
 # ------------------------------------------------ #
 #  Models.
 # ------------------------------------------------ #
 
-def setup_db(app):
-    app.config["SQLALCHEMY_DATABASE_URI"]=os.environ['DATABASE_URL']
+def setup_db(app, database_path=database_path):
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.environ['SQLALCHEMY_TRACK_MODIFICATIONS']
     db.app = app
     db.init_app(app)
+    db.create_all()
+
+'''
+db_drop_and_create_all()
+    drops the database tables and starts fresh
+    can be used to initialize a clean database
+'''
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
 
 
 class User(db.Model):
