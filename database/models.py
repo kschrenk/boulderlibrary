@@ -1,6 +1,6 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Table
 
 database_name = "myclimbinggym"
 database_path = os.environ['DATABASE_BASE_URL'] + database_name
@@ -28,10 +28,19 @@ def db_drop_and_create_all():
     db.create_all()
 
 
+favourite_gyms = Table('gyms', 
+    db.Model.metadata,
+    Column('gym_id', Integer, db.ForeignKey('gym.id'), primary_key=True),
+    Column('user_id', Integer, db.ForeignKey('user.id'), primary_key=True)    
+)
+
+
 class User(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     last_name = Column(String(24), nullable=False)
+    gyms = db.relationship('Gym', secondary=favourite_gyms, lazy='subquery',
+        backref=db.backref('users', lazy=True ))
 
     def __repr__(self):
         return f'<Id: {self.id}; Name: {self.name}>'
@@ -70,7 +79,7 @@ class Gym(db.Model):
     category_id = Column(Integer(), db.ForeignKey("category.id"), nullable=False)
 
     def __repr__(self):
-        return f'<Id: {self.id};\nName: {self.name};\nAdress: {self.address}>'
+        return f'<Id: {self.id} - Name: {self.name} - Adress: {self.address}>'
 
     def formatted(self):
         formatted_gym = {}
@@ -108,7 +117,7 @@ class Category(db.Model):
     def __repr__(self):
         return f'<Id: {self.id}; Description: {self.description}>'
 
-
+ 
 # ------------------------------------------------ #
 #  Getter and Setter
 # ------------------------------------------------ #

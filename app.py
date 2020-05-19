@@ -58,63 +58,6 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
-    # -------------------------------------------------------------------- #
-    # App data.
-    # -------------------------------------------------------------------- #
-    '''
-    Data to initialize the database. 
-    This includes:
-        * Cities and States
-        * Status descriptions (open or closed)
-        * Categories (Boulder or rope climbing gyms)
-    '''
-
-    # load cities and states
-    if (len(State.query.all()) == 0) and (len(City.query.all()) == 0):
-        c1 = Country('Germany')
-        c1_info = c1.get_states_and_cities()  
-        try:   
-            for state in list(c1_info.keys()):
-                new_state = State(name=state)
-                db.session.add(new_state)
-            for state in list(c1_info.keys()):
-                state_in_table = State.query.filter(State.name == state).one_or_none()
-                if state_in_table is None:
-                    print('Could not add cities')
-                else:
-                    for city in c1_info[state]:
-                        new_city = City(name=city, state_id=state_in_table.id)
-                        db.session.add(new_city)
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            abort(422)  
-    else:
-        print('=> Cities and States are loaded')
-
-    
-    # load status description
-    if len(Status.query.all()) == 0:
-        db.session.add_all([
-            Status(description='open'),
-            Status(description='closed')
-        ])
-        db.session.commit()
-    else:
-        print('=> Status Description are loaded')
-
-
-    # load categories
-    if len(Category.query.all()) == 0:
-        db.session.add_all([
-            Category(description='Boulder'),
-            Category(description='Rope climbing'),
-            Category(description='Boulder and rope climbing')
-        ])
-        db.session.commit()
-    else:
-        print('=> Categories are loaded')
-
 
     # -------------------------------------------------------------------- #
     # Controller.
@@ -123,8 +66,75 @@ def create_app(test_config=None):
     @app.route('/')
     def index():
         return redirect(url_for( 'main_bp.public_all_gyms' ))
+    
 
+    @app.route('/data/init', methods=['POST'])
+    def initialize_data():
+        body = request.get_json()
+        response={}
+        error = False
+        try: 
+            if 'country' in body:
+                new_country = body['country']
 
+                # init cities and states in country
+                if (len(State.query.all()) == 0) and (len(City.query.all()) == 0):
+                    c1 = Country(new_country)
+                    c1_info = c1.get_states_and_cities()                      
+                    for state in list(c1_info.keys()):
+                        new_state = State(name=state)
+                        db.session.add(new_state)
+                    for state in list(c1_info.keys()):
+                        state_in_table = State.query.filter(State.name == state).one_or_none()
+                        if state_in_table is None:
+                            print('Could not add cities')
+                        else:
+                            for city in c1_info[state]:
+                                new_city = City(name=city, state_id=state_in_table.id)
+                                db.session.add(new_city)
+                    db.session.commit()    
+                    response['country'] = 'Cities and states of {} initialized'.format(new_country)
+                else:
+                    response['country'] = 'already loaded'
+
+                # init status description
+                if len(Status.query.all()) == 0:
+                    db.session.add_all([
+                        Status(description='open'),
+                        Status(description='closed')
+                    ])
+                    db.session.commit()
+                    response['status'] = 'Status initialized'
+                else:
+                    response['status'] = 'already loaded'
+
+                # init categories
+                if len(Category.query.all()) == 0:
+                    db.session.add_all([
+                        Category(description='Boulder'),
+                        Category(description='Rope climbing'),
+                        Category(description='Boulder and rope climbing')
+                    ])
+                    db.session.commit()
+                    response['categories'] = 'Categories initialized'
+                else:
+                    response['categories'] = 'already loaded'
+
+            else:
+                response['message'] = 'Wrong JSON format'
+        
+        except Exception:
+            error = True
+            db.session.rollback()
+            print(sys.exc_info)
+        finally:
+            db.session.close()
+        if error:
+            abort(422)
+        else:
+            return jsonify(response)
+        
+        
     # -------------------------------------------------------------------- #
     # Error handler.
     # -------------------------------------------------------------------- #
