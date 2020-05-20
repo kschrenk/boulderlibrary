@@ -70,6 +70,7 @@ def create_app(test_config=None):
 
     @app.route('/data/init', methods=['POST'])
     def initialize_data():
+        ''' This endpoint initializes country data with all states and cities in each country.'''
         body = request.get_json()
         response={}
         error = False

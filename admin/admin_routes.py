@@ -60,17 +60,16 @@ def edit_gym(payload, id):
     try:
         data = request.get_json()
         gym = get_gym(id)
-        if gym.id == id:
+        if gym is None:
+            abort(404)
+        else: 
             gym.name = str(data['name'])
             gym.address = str(data['address'])
             gym.city_id = int(data['city'])
             gym.website = str(data['website'])
             gym.category_id = int(data['category'])
             gym.status_description = str(data['status'])
-
             gym.update()
-        else:
-            abort(422)
     except Exception:
         error = True
         db.session.rollback()

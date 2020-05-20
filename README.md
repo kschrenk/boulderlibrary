@@ -41,4 +41,5 @@ createdb boulderlibrary_test
 To test again drop the database and create it again.
 ```bash
 dropdb boulderlibrary_test && createdb boulderlibrary_test
+psql boulderlibrary_test < boulderlibrary.psql
 ```
