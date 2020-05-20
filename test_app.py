@@ -42,6 +42,17 @@ class BoulderlibraryTestCase(unittest.TestCase):
             "category": 1
         }
 
+        self.new_user={
+            "user": "Jhonny",
+            "last_name": "Walker"
+        }
+
+        self.new_user2={
+            "user": "Jhonny",
+            "last_name": "Waaaaaaaaaadfglksglkadfglkadlfkgkdfgkasdglker"
+        }
+
+
         # Binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -95,7 +106,7 @@ class BoulderlibraryTestCase(unittest.TestCase):
         res = self.client().patch('gyms/160', json=self.edit_gym, headers={"Authorization" : self.bearer_tokens['admin']})
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 422)
 
 
     def test_delete_gym(self):
@@ -139,11 +150,43 @@ class BoulderlibraryTestCase(unittest.TestCase):
     # User. 
     # ----------------------------------------------------- #
 
+    ''' Test
+    ROUTE: ('/user/create')
+    METHODS: POST
+    '''
+    def test_create_user(self):
+        res = self.client().post('/user/create', json=self.new_user)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+
+    def test_422_if_last_name_exceeds_character_limit(self):
+        res = self.client().post('/user/create', json=self.new_user2)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 422)
+
+
+    ''' Test
+    ROUTE: ('/user/2/favourites')
+    METHODS: GET
+    '''
+    def test_get_favourite_gyms(self):
+    res = self.client().get('/user/2/favourites', headers={"Authorization" : self.bearer_tokens['user']})
+    data = json.loads(res.data)
+    self.assertEqual(res.status_code, 200)
+
+
+    ''' Test
+    ROUTE: ('/user/favourites/add')
+    METHODS: POST
+    '''
+
+
+
+    ''' Test
+    ROUTE: ('/user/favourites/remove')
+    METHODS: DELETE
+    '''
     
-
-
-
-
 
 
 

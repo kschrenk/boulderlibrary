@@ -3,14 +3,15 @@ import sys
 
 # Flask
 from flask import (
-    Flask, 
-    request, 
-    abort, 
-    jsonify, 
+    Flask,
+    request,
+    abort,
+    jsonify,
     abort,
     redirect,
-    url_for, 
-    render_template) 
+    url_for,
+    render_template
+)
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -18,7 +19,13 @@ from flask_cors import CORS
 from database.models import (
     setup_db,
     db,
-    User, City, State, Category, Gym, Status)
+    User,
+    City,
+    State,
+    Category,
+    Gym,
+    Status
+    )
 from database.data import (
     Country
 )
@@ -40,7 +47,7 @@ def create_app(test_config=None):
     # -------------------------------------------------------------------- #
     # App config.
     # -------------------------------------------------------------------- #
-    
+
     # create and configure the app
     app = Flask(__name__)
     CORS(app)
@@ -50,51 +57,61 @@ def create_app(test_config=None):
     app.register_blueprint(main)
     app.register_blueprint(admin)
     app.register_blueprint(user)
-    
+
     # setup CORS
     @app.after_request
     def after_request(response):
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        response.headers.add(
+            'Access-Control-Allow-Headers',
+            'Content-Type,Authorization,true')
+        response.headers.add(
+            'Access-Control-Allow-Methods',
+            'GET,PUT,POST,DELETE,OPTIONS')
         return response
-
 
     # -------------------------------------------------------------------- #
     # Controller.
     # -------------------------------------------------------------------- #
-    
+
     @app.route('/')
     def index():
-        return redirect(url_for( 'main_bp.public_all_gyms' ))
-    
+        return redirect(url_for('main_bp.public_all_gyms'))
 
     @app.route('/data/init', methods=['POST'])
     def initialize_data():
-        ''' This endpoint initializes country data with all states and cities in each country.'''
+        '''
+        This endpoint initializes country data
+        with all states and cities in each country.
+        '''
         body = request.get_json()
-        response={}
+        response = {}
         error = False
-        try: 
+        try:
             if 'country' in body:
                 new_country = body['country']
 
                 # init cities and states in country
-                if (len(State.query.all()) == 0) and (len(City.query.all()) == 0):
+                if (len(State.query.all()) == 0)
+                and (len(City.query.all()) == 0):
                     c1 = Country(new_country)
-                    c1_info = c1.get_states_and_cities()                      
+                    c1_info = c1.get_states_and_cities()
                     for state in list(c1_info.keys()):
                         new_state = State(name=state)
                         db.session.add(new_state)
                     for state in list(c1_info.keys()):
-                        state_in_table = State.query.filter(State.name == state).one_or_none()
+                        query = State.query.filter(State.name == state)
+                        state_in_table = query.one_or_none()
                         if state_in_table is None:
                             print('Could not add cities')
                         else:
                             for city in c1_info[state]:
-                                new_city = City(name=city, state_id=state_in_table.id)
+                                new_city = City(
+                                    name=city,
+                                    state_id=state_in_table.id
+                                    )
                                 db.session.add(new_city)
-                    db.session.commit()    
-                    response['country'] = 'Cities and states of {} initialized'.format(new_country)
+                    db.session.commit()
+                    response['country'] = 'Cities and states initialized.'
                 else:
                     response['country'] = 'already loaded'
 
@@ -123,7 +140,7 @@ def create_app(test_config=None):
 
             else:
                 response['message'] = 'Wrong JSON format'
-        
+
         except Exception:
             error = True
             db.session.rollback()
@@ -134,8 +151,7 @@ def create_app(test_config=None):
             abort(422)
         else:
             return jsonify(response)
-        
-        
+
     # -------------------------------------------------------------------- #
     # Error handler.
     # -------------------------------------------------------------------- #
@@ -170,12 +186,10 @@ def create_app(test_config=None):
         response.status_code = ex.status_code
         return response
 
-
     return app
-      
+
+
 APP = create_app()
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
-
-
