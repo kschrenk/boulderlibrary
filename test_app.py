@@ -17,11 +17,10 @@ class BoulderlibraryTestCase(unittest.TestCase):
         self.database_path = os.environ['DATABASE_BASE_URL'] + self.database_name
         setup_db(self.app, database_path=self.database_path)
 
-
         # JSON Data
         self.bearer_tokens={
-            "admin": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FWkROREJGUWtWR1JrWXlRelJHTURnNE1qZzBPVFEwUlRNMU1qRXdSVE0wUmpFNU56Y3pNZyJ9.eyJpc3MiOiJodHRwczovL2Rldi13ZDcxNGQ4aC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhNjgyZGFlN2I2YjkwYmY4MTg3MTdiIiwiYXVkIjoiYm91bGRlciIsImlhdCI6MTU4OTk1MDA2NiwiZXhwIjoxNTg5OTU3MjY2LCJhenAiOiJYZGx3NXRMRlJ0aGpoOW81N2UyNUhuRnlqSWttM0RkaCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlOmd5bXMiLCJkZWxldGU6Z3ltcyIsInVwZGF0ZTpneW1zIl19.fzsrPnI1J29Xusdi-wFwdTby4SO9dzX74unUSt7p0BhGahC_mchNqfSN5RFlK1IW95y0-ZLfX-P_sO6mhfohK0WPkSF7xslI5U5mI-TrsrT3M8QDRnGGGhwf90-XIJvGER7VyH2Y3h3IK7xaOQ89nTCglNlMXhiLvIulr0oCALNdAto0jEgBFWAVI6gB-dY9IoDRiDkhp2wI99aUaT6oYoGwD4IUBiuPhrSJoNYSpxuotfTucxDjYCZdRo8S4S7zST9oBuUjY-j-Z4Hja88g07wwS3o27HN9aejnyZOZ_6iRiW1HOtzjXZlKlr35-WmoCc6MZN85cZ7kD3AbFgEN4g",
-            "user": " Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FWkROREJGUWtWR1JrWXlRelJHTURnNE1qZzBPVFEwUlRNMU1qRXdSVE0wUmpFNU56Y3pNZyJ9.eyJpc3MiOiJodHRwczovL2Rldi13ZDcxNGQ4aC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVjMzc4MDU0MDdmMjgwYmVkYjMwZTRjIiwiYXVkIjoiYm91bGRlciIsImlhdCI6MTU4OTg2ODcxNiwiZXhwIjoxNTg5ODc1OTE2LCJhenAiOiJYZGx3NXRMRlJ0aGpoOW81N2UyNUhuRnlqSWttM0RkaCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZmF2b3I6Z3ltcyIsImdldDpmYXZvdXJpdGVfZ3ltcyIsInJlbW92ZTpmYXZvdXJpdGVfZ3ltcyJdfQ.h9E2Ga_VYI_lcNEfFWfbvzE-qqR0DnA1PHEcFW0Z5ZXZy4zc879B9BjKpXP7WcLrruSpr7fhNnYUkY01FSho8lvNYQaSSWSkW-bCkcrvxTC9K-bfnFqcYQ_-3MOxIsl2HvzQxDouIw7iXx0rKcaQRyChmUJUhmefIR8Fwqdawxr91_CkxK8Wi1dAF6bluBXCYVHXkORKdX1XqGvmkfh00IjXoWB6tWlYArP60p7Zc1M1rRaiSB47S8TVua7K0DyipYIw8IN95rhKv2QU-Qqzh5frnHB-3oGM5BzayPRNOmriaVzLCmaUtFfkeacsarL6Xv0q6BtkpjeDFn8WXTQBDA"
+            "admin": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FWkROREJGUWtWR1JrWXlRelJHTURnNE1qZzBPVFEwUlRNMU1qRXdSVE0wUmpFNU56Y3pNZyJ9.eyJpc3MiOiJodHRwczovL2Rldi13ZDcxNGQ4aC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhNjgyZGFlN2I2YjkwYmY4MTg3MTdiIiwiYXVkIjoiYm91bGRlciIsImlhdCI6MTU5MDEzODA4MSwiZXhwIjoxNTkwMTQ1MjgxLCJhenAiOiJYZGx3NXRMRlJ0aGpoOW81N2UyNUhuRnlqSWttM0RkaCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlOmd5bXMiLCJkZWxldGU6Z3ltcyIsInVwZGF0ZTpneW1zIl19.l0cTGZMazVXnDwA0Ln3R3h1PkS98C7zC6Mcmtph_GSHtegON9J20Wq0dIL-CwqPRVhHEsx2Fdh_xaewTdIxnx4wYVCH1NGgG7vT86mt13z14gF7KYXvMBlSfy3kdXqsWKllwSZhsouOvH659r73XR_Dzy-FBU9PnjZY4MTaTOj4t3YQYPTLy_hGfZGh06rmIcY9m3rl7efyV4a9RZ8KTIJwCMicDXlNtFvvgiPc4QOfTJADVqr-q6CRN8hNqA9JCkNYkGO46O24R9--LuZD0dfX5wHHWOV0VezEUID6Y3sIwbEu885jrmPDvT7WgJQ_6mn9ENs2kYHiPyIf0qI7-eA",
+            "user": " Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FWkROREJGUWtWR1JrWXlRelJHTURnNE1qZzBPVFEwUlRNMU1qRXdSVE0wUmpFNU56Y3pNZyJ9.eyJpc3MiOiJodHRwczovL2Rldi13ZDcxNGQ4aC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVjMzc4MDU0MDdmMjgwYmVkYjMwZTRjIiwiYXVkIjoiYm91bGRlciIsImlhdCI6MTU5MDEzNzE2NiwiZXhwIjoxNTkwMTQ0MzY2LCJhenAiOiJYZGx3NXRMRlJ0aGpoOW81N2UyNUhuRnlqSWttM0RkaCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZmF2b3I6Z3ltcyIsImdldDpmYXZvdXJpdGVfZ3ltcyIsInJlbW92ZTpmYXZvdXJpdGVfZ3ltcyJdfQ.DvdHFHElVx63aDaFck4VY9Il0f3VGm7PQr62rCM02p1llVyYcFPtQ0sJmaNEMaftVkQhSj6MlR4h5Doa6Q5a_YF9tIETcu1IL6Y1v2Y3RDXzSLVwQgKpENwRGzZxayle_Oce6w8RlLl9D1fYvcCZ1BVK7WJ_mvx9OrPZm_3iQF-oNayYnfSV4QVpK9aj5vKx8Vn_Wl0Mp_yZXfJDPmOT6u80O-UQCdLTFYZwh5ZewSeoBLsnMfMKkkSuq2sHRHKRftpMnyWVG-OFaRJG3jxCBcqooz0Cnb-dkmGbmto2t66FPwJW0wdqkVW4gdqAZJC48n-7_QQz63oTxUCSd7P1Mw"
         }
 
         self.new_gym={
@@ -52,6 +51,25 @@ class BoulderlibraryTestCase(unittest.TestCase):
             "last_name": "Waaaaaaaaaadfglksglkadfglkadlfkgkdfgkasdglker"
         }
 
+        self.add_favs={
+            "user_id": 2,
+	        "gym_id": 6
+        }
+
+        self.add_wrong_favs={
+            "user_id": 2,
+	        "gym_id": 600
+        }
+
+        self.rem_favs={
+            "user_id": 2,
+	        "gym_id": 16
+        }
+
+        self.rem_error_favs={
+            "user_id": 2,
+	        "gym_id": 160
+        }
 
         # Binds the app to the current context
         with self.app.app_context():
@@ -59,7 +77,7 @@ class BoulderlibraryTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
-    
+
 
     def tearDown(self):
         '''Executed after each test'''
@@ -67,7 +85,7 @@ class BoulderlibraryTestCase(unittest.TestCase):
 
 
     # ----------------------------------------------------- #
-    # Admin. 
+    # Admin.
     # ----------------------------------------------------- #
 
     ''' Test
@@ -87,8 +105,16 @@ class BoulderlibraryTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(data["description"], 'Authorization header is expected.')    
-    
+        self.assertEqual(data["description"], 'Authorization header is expected.')
+
+
+    def test_401_if_permission_not_found(self):
+        res = self.client().post('/gyms/create', json=self.new_gym, headers={"Authorization" : self.bearer_tokens['user']})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(data["code"], "unauthorized")
+
 
     ''' Test
     ROUTE: ('/gyms/<int:id>')
@@ -112,7 +138,7 @@ class BoulderlibraryTestCase(unittest.TestCase):
     def test_delete_gym(self):
         res = self.client().delete('gyms/1', headers={"Authorization" : self.bearer_tokens['admin']})
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
 
@@ -120,13 +146,13 @@ class BoulderlibraryTestCase(unittest.TestCase):
     def test_422_if_id_does_not_exist(self):
         res = self.client().delete('gyms/10000', headers={"Authorization" : self.bearer_tokens['admin']})
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data["success"], False)
 
 
     # ----------------------------------------------------- #
-    # Main. 
+    # Main.
     # ----------------------------------------------------- #
 
     ''' Test
@@ -147,7 +173,7 @@ class BoulderlibraryTestCase(unittest.TestCase):
 
 
     # ----------------------------------------------------- #
-    # User. 
+    # User.
     # ----------------------------------------------------- #
 
     ''' Test
@@ -170,24 +196,52 @@ class BoulderlibraryTestCase(unittest.TestCase):
     METHODS: GET
     '''
     def test_get_favourite_gyms(self):
-    res = self.client().get('/user/2/favourites', headers={"Authorization" : self.bearer_tokens['user']})
-    data = json.loads(res.data)
-    self.assertEqual(res.status_code, 200)
+        res = self.client().get('/user/2/favourites', headers={"Authorization" : self.bearer_tokens['user']})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+
+    def test_401_if_auth_header_is_missing(self):
+        res = self.client().get('/user/2/favourites')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
 
 
     ''' Test
     ROUTE: ('/user/favourites/add')
     METHODS: POST
     '''
+    def test_add_gym_to_favourites(self):
+        res = self.client().post('/user/favourites/add', json=self.add_favs, headers={"Authorization" : self.bearer_tokens['user']})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
 
+    def test_404_if_wrong_key(self):
+        res = self.client().post('/user/favourites/add', json=self.add_wrong_favs, headers={"Authorization" : self.bearer_tokens['user']})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
 
+    def test_401_if_permission_not_found(self):
+        res = self.client().post('/user/favourites/add', json=self.add_favs, headers={"Authorization" : self.bearer_tokens['admin']})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(data["code"], "unauthorized")
 
     ''' Test
     ROUTE: ('/user/favourites/remove')
     METHODS: DELETE
     '''
-    
+    def test_remove_gym(self):
+        res = self.client().delete('/user/favourites/remove', json=self.rem_favs, headers={"Authorization" : self.bearer_tokens['user']})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
 
+
+    def test_404_if_value_error(self):
+        res = self.client().delete('/user/favourites/remove', json=self.rem_error_favs, headers={"Authorization" : self.bearer_tokens['user']})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
 
 
 # Make the tests conveniently executable

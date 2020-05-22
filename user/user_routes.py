@@ -13,7 +13,7 @@ user_bp=Blueprint('user_bp', __name__, url_prefix='/user')
 def public_create_user():
     data = request.get_json()
     error = False
-    try: 
+    try:
         new_user = User(
             name=str(data['user']),
             last_name=str(data['last_name'])
@@ -50,7 +50,7 @@ def get_favourite_gyms(payload, id):
         print(sys.exc_info())
     finally:
         db.session.close()
-    if error: 
+    if error:
         abort(422)
     else:
         return jsonify(response)
@@ -64,16 +64,21 @@ def add_favourite_gym(payload):
     try:
         user = User.query.get(body['user_id'])
         gym_to_add = Gym.query.get(body['gym_id'])
+
+        if user is None or gym_to_add is None:
+            raise ValueError
+
         user.gyms.append(gym_to_add)
         db.session.commit()
-    except Exception:
+
+    except (KeyError, ValueError):
         error = True
         db.session.rollback()
-        print(sys.exc_info())
+        print('NOT FOUND: Wrong user_id oder gym_id')
     finally:
         db.session.close()
     if error:
-        abort(422)
+        abort(404)
     else:
         return jsonify({
             "success": True,
@@ -88,19 +93,21 @@ def remove_favourite_gym(payload):
     error = False
     try:
         user = User.query.get(body['user_id'])
+        print(user)
         gym_to_remove = Gym.query.get(body['gym_id'])
         user.gyms.remove(gym_to_remove)
         db.session.commit()
-    except Exception:
+    except (KeyError, ValueError):
         error = True
         db.session.rollback()
-        print(sys.exc_info())
+        print('NOT FOUND: Wrong user_id oder gym_id')
     finally:
         db.session.close()
     if error:
-        abort(422)
+        abort(404)
     else:
         return jsonify({
-            "success": True, 
+            "success": True,
             "message": "Gym successfully removed from users favourites."
         })
+

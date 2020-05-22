@@ -91,8 +91,7 @@ def create_app(test_config=None):
                 new_country = body['country']
 
                 # init cities and states in country
-                if (len(State.query.all()) == 0)
-                and (len(City.query.all()) == 0):
+                if (len(State.query.all()) == 0) and (len(City.query.all()) == 0):
                     c1 = Country(new_country)
                     c1_info = c1.get_states_and_cities()
                     for state in list(c1_info.keys()):
