@@ -13,14 +13,19 @@ class BoulderlibraryTestCase(unittest.TestCase):
         '''Define test variables and initialize the app'''
         self.app = create_app()
         self.client = self.app.test_client
-        self.database_name = "boulderlibrary_test"
+        self.database_name = os.environ['DATABASE_TEST_NAME']
         self.database_path = os.environ['DATABASE_BASE_URL'] + self.database_name
         setup_db(self.app, database_path=self.database_path)
 
         # JSON Data
+
+        admin_token = os.environ['ADMIN_TOKEN']
+        user_token = os.environ['USER_TOKEN']
+        token_type = 'Bearer '
+
         self.bearer_tokens={
-            "admin": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FWkROREJGUWtWR1JrWXlRelJHTURnNE1qZzBPVFEwUlRNMU1qRXdSVE0wUmpFNU56Y3pNZyJ9.eyJpc3MiOiJodHRwczovL2Rldi13ZDcxNGQ4aC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhNjgyZGFlN2I2YjkwYmY4MTg3MTdiIiwiYXVkIjoiYm91bGRlciIsImlhdCI6MTU5MDEzODA4MSwiZXhwIjoxNTkwMTQ1MjgxLCJhenAiOiJYZGx3NXRMRlJ0aGpoOW81N2UyNUhuRnlqSWttM0RkaCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlOmd5bXMiLCJkZWxldGU6Z3ltcyIsInVwZGF0ZTpneW1zIl19.l0cTGZMazVXnDwA0Ln3R3h1PkS98C7zC6Mcmtph_GSHtegON9J20Wq0dIL-CwqPRVhHEsx2Fdh_xaewTdIxnx4wYVCH1NGgG7vT86mt13z14gF7KYXvMBlSfy3kdXqsWKllwSZhsouOvH659r73XR_Dzy-FBU9PnjZY4MTaTOj4t3YQYPTLy_hGfZGh06rmIcY9m3rl7efyV4a9RZ8KTIJwCMicDXlNtFvvgiPc4QOfTJADVqr-q6CRN8hNqA9JCkNYkGO46O24R9--LuZD0dfX5wHHWOV0VezEUID6Y3sIwbEu885jrmPDvT7WgJQ_6mn9ENs2kYHiPyIf0qI7-eA",
-            "user": " Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FWkROREJGUWtWR1JrWXlRelJHTURnNE1qZzBPVFEwUlRNMU1qRXdSVE0wUmpFNU56Y3pNZyJ9.eyJpc3MiOiJodHRwczovL2Rldi13ZDcxNGQ4aC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVjMzc4MDU0MDdmMjgwYmVkYjMwZTRjIiwiYXVkIjoiYm91bGRlciIsImlhdCI6MTU5MDEzNzE2NiwiZXhwIjoxNTkwMTQ0MzY2LCJhenAiOiJYZGx3NXRMRlJ0aGpoOW81N2UyNUhuRnlqSWttM0RkaCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZmF2b3I6Z3ltcyIsImdldDpmYXZvdXJpdGVfZ3ltcyIsInJlbW92ZTpmYXZvdXJpdGVfZ3ltcyJdfQ.DvdHFHElVx63aDaFck4VY9Il0f3VGm7PQr62rCM02p1llVyYcFPtQ0sJmaNEMaftVkQhSj6MlR4h5Doa6Q5a_YF9tIETcu1IL6Y1v2Y3RDXzSLVwQgKpENwRGzZxayle_Oce6w8RlLl9D1fYvcCZ1BVK7WJ_mvx9OrPZm_3iQF-oNayYnfSV4QVpK9aj5vKx8Vn_Wl0Mp_yZXfJDPmOT6u80O-UQCdLTFYZwh5ZewSeoBLsnMfMKkkSuq2sHRHKRftpMnyWVG-OFaRJG3jxCBcqooz0Cnb-dkmGbmto2t66FPwJW0wdqkVW4gdqAZJC48n-7_QQz63oTxUCSd7P1Mw"
+            "admin": token_type + admin_token,
+            "user": token_type + user_token
         }
 
         self.new_gym={

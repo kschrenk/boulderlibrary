@@ -4,7 +4,6 @@ Nowadays climbers all around the world want to be up-to-date about their favouri
 
 This project is based on a python flask backend that communicates with a postgresql database. The API is hosted on Heroku. The frontend development will be on of the future tasks so to test the api use cURL or Postman.
 
-
 ## Getting Started
 
 ### Installing Dependecies
@@ -21,30 +20,38 @@ All the dependecies are listed in the requirements.txt. The following commands w
 pip3 install -r requirements.txt
 ```
 
+### Environment Variables
 
-## Configuration Variables
-
-To initiate the App run the setup.sh. This will set the configuration variables.
+To initiate the app first open the setup-example.sh and insert the necessary variables. Afterwards you can rename it to 'setup.sh' or whatever name you prefer. To set env variables run:
 
 ```bash
 . setup.sh
 ```
 
-## Setup the database
+### Setup the database
 
 To initialize the database run
-'''
-createdb myclimbinggym
-'''
+```bash
+createdb <YOUR DATABASE NAME>
+```
 
-Than initialize the database with the manager.py
-'''
+After setting up the database run the migrations.
+```
 python3 manage.py db init
 python3 manage.py db migrate
 python3 manage.py db upgrade
-'''
+```
 
-# Testing
+### Run the server
+
+Finally run the local development server by executing:
+
+```bash
+flask run
+```
+
+
+## Testing
 At first create a new database for testing.
 ```bash
 createdb boulderlibrary_test
@@ -55,3 +62,10 @@ To test again drop the database and create it again.
 dropdb boulderlibrary_test && createdb boulderlibrary_test
 psql boulderlibrary_test < boulderlibrary.psql
 ```
+
+
+## API Reference
+
+### Endpoints
+
++ GET
