@@ -2,8 +2,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, Table
 
-database_name = "myclimbinggym"
-database_path = os.environ['DATABASE_BASE_URL'] + database_name
+database_path = os.environ['DATABASE_URL']
 
 db = SQLAlchemy()
 
@@ -28,10 +27,10 @@ def db_drop_and_create_all():
     db.create_all()
 
 
-favourite_gyms = Table('gyms', 
+favourite_gyms = Table('gyms',
     db.Model.metadata,
     Column('gym_id', Integer, db.ForeignKey('gym.id'), primary_key=True),
-    Column('user_id', Integer, db.ForeignKey('user.id'), primary_key=True)    
+    Column('user_id', Integer, db.ForeignKey('user.id'), primary_key=True)
 )
 
 
@@ -49,8 +48,8 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-        
-class City(db.Model): 
+
+class City(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     state_id = Column(Integer, db.ForeignKey("state.id"), nullable=False)
@@ -75,7 +74,7 @@ class Gym(db.Model):
     address = Column(String(), unique=True, nullable = False)
     website = Column(String(), nullable=False)
     city_id = Column(Integer(), db.ForeignKey("city.id"), nullable=False)
-    status_description = Column(String(12), db.ForeignKey("status.description"), nullable=False)  
+    status_description = Column(String(12), db.ForeignKey("status.description"), nullable=False)
     category_id = Column(Integer(), db.ForeignKey("category.id"), nullable=False)
 
     def __repr__(self):
@@ -91,14 +90,14 @@ class Gym(db.Model):
         formatted_gym['category'] = self.category.description
         formatted_gym['status'] = self.status.description
         return formatted_gym
-    
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
-    
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -117,24 +116,24 @@ class Category(db.Model):
     def __repr__(self):
         return f'<Id: {self.id}; Description: {self.description}>'
 
- 
+
 # ------------------------------------------------ #
 #  Getter and Setter
 # ------------------------------------------------ #
 
 def get_gym(id):
-    ''' 
+    '''
     Returns a gym object.
     :param id: int.
     :return: a sql alchemy object.
     '''
     gym = Gym.query.filter(Gym.id == id).one_or_none()
 
-    return gym 
+    return gym
 
 
 def get_city_id(na):
-    ''' 
+    '''
     Returns the id of a city.
     :param name: str.
     :return: the city's id.
@@ -142,7 +141,7 @@ def get_city_id(na):
     city_id = City.query.filter(City.name == na).one_or_none().id
     if city_id == None:
         abort(404)
-    
+
     return city_id
 
 
@@ -155,5 +154,5 @@ def get_category_id(descr):
     category_id = Category.query.filter(Category.description == str(descr)).one_or_none().id
     if category_id == None:
         abort(404)
-    
+
     return category_id
