@@ -12,7 +12,7 @@ admin_bp = Blueprint('admin_bp', __name__)
 def create_gym(payload):
     '''
     Adds a new gym to the database.
-    :INPUT: JSON. Example: 
+    :INPUT: JSON. Example:
         {
             "name":"<STRING: GYMS NAME>",
             "address": "<STRING: STREET AND NUMBER>",
@@ -24,7 +24,7 @@ def create_gym(payload):
     '''
     body = request.get_json()
     error = False
-    try:        
+    try:
         gym = Gym(
             name=str(body['name']),
             address=str(body['address']),
@@ -62,7 +62,7 @@ def edit_gym(payload, id):
         gym = get_gym(id)
         if gym is None:
             abort(404)
-        else: 
+        else:
             gym.name = str(data['name'])
             gym.address = str(data['address'])
             gym.city_id = int(data['city'])
@@ -78,13 +78,13 @@ def edit_gym(payload, id):
         db.session.close()
     if error:
         abort(422)
-    else: 
+    else:
         return jsonify({
             "success": True,
             "message":  "Gym successfully edited"
         })
 
-    
+
 @admin_bp.route('/gyms/<int:id>', methods=["DELETE"])
 @require_auth('delete:gyms')
 def delete_gym(payload, id):
@@ -104,7 +104,7 @@ def delete_gym(payload, id):
         db.session.close()
     if error:
         abort(422)
-    else: 
+    else:
         return jsonify({
             "success": True,
             "message":  "Gym successfully deleted"

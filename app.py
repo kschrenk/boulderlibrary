@@ -161,7 +161,7 @@ def create_app(test_config=None):
             "success": False,
             "error": 401,
             "message": "Unauthorized"
-            }), 404
+            }), 401
 
     @app.errorhandler(404)
     def unprocessable(error):

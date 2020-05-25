@@ -8,8 +8,8 @@ main_bp = Blueprint('main_bp', __name__)
 
 @main_bp.route('/gyms', methods=["GET"])
 def public_all_gyms():
-    ''' 
-    Displays all gyms in the database 
+    '''
+    Displays all gyms in the database
     :returns: JSON.
     '''
     body = []
@@ -40,7 +40,7 @@ def public_gym(id):
     try:
         query = Gym.query.filter(Gym.id == id).one_or_none()
         if query is None:
-            abort(404) 
+            abort(404)
         body = [query.formatted()]
     except Exception:
         error = True
