@@ -69,6 +69,23 @@ def create_app(test_config=None):
             'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
+    # flask shell
+    @app.shell_context_processor
+    def makeShellContext():
+        '''
+        Imports the db instance and models to the shell session
+        '''
+        return dict(
+            db=db,
+            User=User,
+            City=City,
+            State=State,
+            Category=Category,
+            Gym=Gym,
+            Status=Status
+        )
+
+
     # -------------------------------------------------------------------- #
     # Controller.
     # -------------------------------------------------------------------- #
@@ -84,6 +101,7 @@ def create_app(test_config=None):
         with all states and cities in each country.
         '''
         body = request.get_json()
+        print(body)
         response = {}
         error = False
         try:
