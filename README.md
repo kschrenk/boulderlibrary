@@ -8,8 +8,10 @@ This project is based on a python flask backend that communicates with a postgre
 
 ### Installing Dependecies
 
+
 #### Python 3.7
 Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+
 
 #### Virtual Environment
 Once you installed the latest python version setup a virtual environment and activate it. See [further instructions](https://docs.python.org/3/tutorial/venv.html "Python Tutorials") on how to create virtual environments.
@@ -23,16 +25,23 @@ All the dependecies are listed in the requirements.txt. The following commands w
 pip3 install -r requirements.txt
 ```
 
+
 ### Environment Variables
-The app is configured by env variables that are stores in the setup-example.sh.
+The app is configured by env variables that are stores in the setup-example.sh. Just rename it to setup.sh and execute it with
 ```bash
-. setup-example.sh
+. example.sh
 ```
+
 
 ### Setup the database
 For the database you need to have Postgresql installed. If you use Mac Os just use [Homebrew](https://formulae.brew.sh/formula/postgresql). But there are other ways for Mac and Windows. After installing postgresql create a new database with:
 ```bash
 createdb boulderlibrary
+```
+
+To insert some data into yur boulderlibrary database just import the dump in the database directory with
+```bash
+psql boulderlibrary < path/to/database.sql
 ```
 
 After setting up the database run the migrations.
